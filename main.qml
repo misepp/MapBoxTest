@@ -145,8 +145,7 @@ Item {
         NumberAnimation { properties: "scale"; duration: 500; easing.type: Easing.InOutQuad }
     }
 
-
-    Item {
+    MenuChoices {
         id: qmlContainer
         width: 450
         height: 300
@@ -155,104 +154,21 @@ Item {
         visible: true
         scale: 0
 
-        Column {
-            id: buttonColumn
-            Repeater {
-                id: repeater
-                model: 5
-                Rectangle {
-                    width: qmlContainer.width
-                    height: qmlContainer.height/5
-                    border.width: 1
-                    border.color: "black"
-                    radius: 3
-                    Button {
-                        id: testButton
-                        width: parent.width-2
-                        height: parent.height-2
-                        anchors.centerIn: parent
-                        property int ind: index
-                        Text {
-                            id: name
-                            anchors.centerIn: parent
-                            text: parent.selectText(parent.ind)
-                            color: "red"
-                            font.pointSize: 12
-                        }
+        buttonCount: 5
+        texts: ["Tilt gauges","Select drive mode","Navigation","Entertainment","Settings"]
 
-                        function selectText(index) {
-                            var string;
-                            switch (index) {
-                            case 0:
-                                string = "Tilt gauges";
-                                break;
-                            case 1:
-                                string = "Select drive mode";
-                                break;
-                            case 2:
-                                string = "Navigation";
-                                break;
-                            case 3:
-                                string = "Entertainment";
-                                break;
-                            case 4:
-                                string = "Settings";
-                                break;
-                            default:
-                                string = "";
-                                break;
-                            }
-                            return string;
-                        }
-
-                        //flat: true
-                        //highlighted: true
-                        background: Rectangle {
-//                            implicitWidth: 100
-//                            implicitHeight: 40
-                            //opacity: enabled ? 1 : 0.3
-                            gradient: Gradient {
-                                GradientStop { position: 0.0; color: testButton.pressed ? "blue" : "green" }
-                                GradientStop { position: 1.0; color: testButton.pressed ? "green" : "blue" }
-                            }
-                            //color: testButton.down ? "green" : "red"
-                        }
-
-                        onClicked: {
-                            console.log("******** CLICK" + index);
-                            if(index == 2) {
-                                root.inMenu = false;
-                                s3dpres.goToSlide("Scene","Angle");
-                                map.running = true;
-                                //s3dpres.fireEvent("Scene","onPressureDown");
-                            }
-                            if(index == 1) {
-                                root.inMenu = false;
-                                s3dpres.goToSlide("Scene","Front");
-                                map.running = false;
-                            }
-
-                        }
-
-//                        onReleased: {
-//                            console.log("******** RELEASE");
-//                            anchors.centerIn = parent
-//                        }
-
-//                        states: State {
-//                            name: "press"
-//                            when: testButton.pressed
-//                            PropertyChanges {
-//                                target: testButton
-//                                x: +1
-//                                y: +1
-//                            }
-//                        }
-//                        transitions: Transition {
-//                                NumberAnimation { properties: "x,y"; duration: 100; easing.type: Easing.InOutQuad }
-//                            }
-                    }
-                }
+        onButtonClicked: {
+            console.log("******** CLICK" + index);
+            if(index == 2) {
+                root.inMenu = false;
+                s3dpres.goToSlide("Scene","Angle");
+                map.running = true;
+                //s3dpres.fireEvent("Scene","onPressureDown");
+            }
+            if(index == 1) {
+                root.inMenu = false;
+                s3dpres.goToSlide("Scene","Front");
+                map.running = false;
             }
         }
     }
