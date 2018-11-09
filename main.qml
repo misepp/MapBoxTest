@@ -11,73 +11,108 @@ Item {
     id: root
 
     property bool inMenu: false
+
+
+//    Studio3DProfiler {
+//        anchors.fill: parent
+//        visible: true
+//        z: 24
+//    }
+
 //    width: 1024
 //    height: 800
 //    visible: true
 
-//    Map {
-//        id: map
-//        property MapCircle circle
-//        property real naviTilt: 0
-//        property real zoom: 12
+    Map {
+        id: map
+        z: 1
+        opacity: 0.0
 
-//        function tiltIn() {
-//            if (naviTilt < 60) {
-//                naviTilt += 0.05
-//            }
-//        }
-//        function zoomIn() {
-//            if (zoom < 18) {
-//                zoom += 0.001
-//            }
-//        }
+        property MapCircle circle
+        property real naviTilt: 0
+        property real zoom: 12
+        property bool running: false
 
-//        anchors.fill: parent
-//        plugin: Navi {}
-//        center: QtPositioning.coordinate(65.101032, 25.417404) // Oslo
-//        zoomLevel: zoom
-//        tilt: naviTilt
+        function tiltIn() {
+            if (naviTilt < 60) {
+                naviTilt += 0.05
+            }
+        }
+        function zoomIn() {
+            if (zoom < 18) {
+                zoom += 0.001
+            }
+        }
 
-//        Timer {
-//            id: routeTimer
-//            interval: 10
-//            repeat: true
-//            running: true
-//            triggeredOnStart: true
-//            onTriggered: {
-//                map.tiltIn();
-//                map.zoomIn();
-//            }
-//        }
+        states: [
+            State {
+                name: "onMap"
+                when: map.running
+                PropertyChanges {
+                    target: map
+                    opacity: 1.0
+                }
+            },
+            State {
+                name: "noMap"
+                when: !map.running
+                PropertyChanges {
+                    target: map
+                    opacity: 0.0
+                }
+            }
+        ]
 
-//        onCenterChanged: {
-//            console.log(center);
-//            //circle.center = map.center
-//        }
+        transitions: Transition {
+            NumberAnimation { properties: "opacity"; duration: 2000; /*easing.type: Easing.InOutQuad*/ }
+        }
 
-//        MapCircle {
-//            id: circle
-//            center: map.center
-//            radius: 2
-//            color: 'green'
-//            border.width: 4
-//            opacity: 0.2
+        anchors.fill: parent
+        plugin: Navi {}
+        center: QtPositioning.coordinate(65.101032, 25.417404) // Oslo
+        zoomLevel: zoom
+        tilt: naviTilt
 
-//            Component.onCompleted: {
-//                center = center
-//            }
-//        }
+        Timer {
+            id: routeTimer
+            interval: 10
+            repeat: true
+            running: map.running || map.opacity > 0.0
+            triggeredOnStart: true
+            onTriggered: {
+                map.tiltIn();
+                map.zoomIn();
+            }
+        }
 
-//        Component.onCompleted:  {
-////            circle = Qt.createQmlObject('import QtLocation 5.11; MapCircle{}', map)
-////            circle.center = map.center
-////            circle.radius = 2
-////            circle.color = 'green'
-////            circle.border.width = 4
-////            circle.opacity = 0.2
-//            map.addMapItem(circle)
-//        }
-//    }
+        onCenterChanged: {
+            console.log(center);
+            //circle.center = map.center
+        }
+
+        MapCircle {
+            id: circle
+            center: map.center
+            radius: 2
+            color: 'green'
+            border.width: 4
+            opacity: 0.2
+
+            Component.onCompleted: {
+                center = center
+            }
+        }
+
+        Component.onCompleted:  {
+//            circle = Qt.createQmlObject('import QtLocation 5.11; MapCircle{}', map)
+//            circle.center = map.center
+//            circle.radius = 2
+//            circle.color = 'green'
+//            circle.border.width = 4
+//            circle.opacity = 0.2
+            map.addMapItem(circle)
+        }
+    }
 
     Rectangle {
         anchors.fill: parent
@@ -116,7 +151,7 @@ Item {
         width: 450
         height: 300
         anchors.centerIn: parent
-        z: 6
+        z: 2
         visible: true
         scale: 0
 
@@ -188,11 +223,13 @@ Item {
                             if(index == 2) {
                                 root.inMenu = false;
                                 s3dpres.goToSlide("Scene","Angle");
+                                map.running = true;
                                 //s3dpres.fireEvent("Scene","onPressureDown");
                             }
                             if(index == 1) {
                                 root.inMenu = false;
                                 s3dpres.goToSlide("Scene","Front");
+                                map.running = false;
                             }
 
                         }
@@ -244,7 +281,7 @@ Item {
         height: 50
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        z: 6
+        z: 2
 
         Rectangle {
             width: parent.width
@@ -294,6 +331,7 @@ Item {
         focus: true
         anchors.margins: 0
         anchors.fill: parent
+        z: 1
 
         property real speedy: 0
         property double mapOp: 0.0
