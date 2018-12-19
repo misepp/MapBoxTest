@@ -1,4 +1,4 @@
-QT += quick core opengl 3dstudioruntime2 location positioning studio3d #3dcore 3drender 3dinput 3dlogic 3dextras qml 3dquick 3danimation
+QT += quick core opengl location positioning studio3d #3dstudioruntime2 #3dcore 3drender 3dinput 3dlogic 3dextras qml 3dquick 3danimation
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use

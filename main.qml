@@ -373,6 +373,15 @@ Item {
                 name: "mapOpa"
                 value: s3d.mapOp
             }
+            DataInput {
+                name: "leftSignal"
+            }
+            DataInput {
+                name: "rightSignal"
+            }
+
+            // Vilkkujen datainputit lisätty.
+            // Otetaan käyttöön, animoidaan täällä -> laitetaan toimimaan napeilla
 
             onSlideEntered: {
             }
